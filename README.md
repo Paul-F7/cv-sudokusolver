@@ -24,6 +24,35 @@ The solver combines two classical AI techniques:
 
 **Backtracking Search** - For harder puzzles where multiple possibilities remain, the algorithm selects an unsolved cell, makes a guess, and recursively attempts to solve the resulting puzzle. If it reaches an invalid state (a cell with no legal values), it backtracks to the last decision point and tries a different value. This depth-first search guarantees finding a solution if one exists.
 
+```
+                    [Initial Puzzle]
+                          │
+                          ▼
+               ┌─────────────────────┐
+               │     Propagate       │ ◄─────────────────┐
+               │    Constraints      │                   │
+               └─────────────────────┘                   │
+                          │                              │
+                          ▼                              │
+                ┌───────────────────┐                    │
+                │  Solved?          │── Yes ──► Done     │
+                └───────────────────┘                    │
+                          │ No                           │
+                          ▼                              │
+                ┌───────────────────┐                    │
+                │  Pick unsolved    │                    │
+                │  cell, try value  │                    │
+                └───────────────────┘                    │
+                          │                              │
+                          ▼                              │
+                ┌───────────────────┐                    │
+                │  Valid state?     │── Yes ─────────────┘
+                └───────────────────┘
+                          │ No
+                          ▼
+                     Backtrack
+```
+
 The combination of constraint propagation (to prune the search space) and backtracking (to handle ambiguity) solves any valid Sudoku puzzle in under 100ms.
 
 ## Tech Stack
@@ -34,11 +63,3 @@ The combination of constraint propagation (to prune the search space) and backtr
 | **PyTorch** | Deep learning framework powering the neural networks |
 | **YOLOv8 (Ultralytics)** | State-of-the-art object detection and image classification |
 | **OpenCV** | Image preprocessing, thresholding, and cell extraction |
-
-### Why YOLOv8?
-
-YOLO (You Only Look Once) performs detection in a single forward pass through the network, making it fast enough for real-time applications. The v8 architecture from Ultralytics provides an excellent balance of accuracy and speed, with built-in support for both object detection (locating the grid) and classification (reading digits).
-
-### Why Constraint Propagation + Backtracking?
-
-Pure brute force would need to check up to 9^81 combinations. Constraint propagation dramatically reduces this by eliminating impossible values early. Most cells get resolved without any guessing, and backtracking only kicks in for the truly ambiguous cases. This makes the solver both correct (guaranteed to find a solution) and fast (typically milliseconds).
