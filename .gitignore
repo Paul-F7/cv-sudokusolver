@@ -1,0 +1,45 @@
+# Virtual Environments
+venv/
+tf_evv/
+.env/
+.env.*
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ML/Training
+runs/
+*.pt
+*.pth
+*.onnx
+weights/
+
+# Datasets
+datasetsudoku/
+datasetsudoku.zip
+*.zip
+
+# Logs
+*.log
