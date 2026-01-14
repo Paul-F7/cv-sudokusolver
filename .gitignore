@@ -1,6 +1,6 @@
 # Virtual Environments
 venv/
-tf_evv/
+tf_env/
 .env/
 .env.*
 .venv/
@@ -40,6 +40,8 @@ weights/
 datasetsudoku/
 datasetsudoku.zip
 *.zip
+datasetdigits/
 
 # Logs
 *.log
+models/

@@ -5,7 +5,7 @@ A computer vision system that photographs a Sudoku puzzle and solves it automati
 ## Pipeline
 
 ```
-Photo → Detect Grid → Extract Cells → Recognize Digits → Solve
+Photo → Detect Grid → Warp → Split Cells → Recognize Digits → Solve → Render Solution
 ```
 
 ## Computer Vision (YOLOv8)
@@ -63,3 +63,4 @@ The combination of constraint propagation (to prune the search space) and backtr
 | **PyTorch** | Deep learning framework powering the neural networks |
 | **YOLOv8 (Ultralytics)** | State-of-the-art object detection and image classification |
 | **OpenCV** | Image preprocessing, thresholding, and cell extraction |
+| **Pillow** | Rendering solved sudoku grids as images |
