@@ -33,15 +33,7 @@ Photograph a Sudoku puzzle and get the solution instantly.
 
 ### Grid Detection Model
 
-Locates Sudoku grids in photographs using YOLOv8 object detection.
-
-| Specification | Value |
-|---------------|-------|
-| Architecture | YOLOv8 Nano |
-| Input Size | 416×416 |
-| Epochs | 100 |
-| Dataset | 500+ images (Roboflow) |
-| Hardware | Apple Silicon GPU (MPS) |
+YOLOv8 Nano object detection trained on 500+ images from Roboflow.
 
 **Training Results**
 
@@ -84,16 +76,7 @@ Locates Sudoku grids in photographs using YOLOv8 object detection.
 
 ### Digit Classification Model
 
-Identifies digits 1-9 in individual cells using YOLOv8 classification.
-
-| Specification | Value |
-|---------------|-------|
-| Architecture | YOLOv8 Nano Classification |
-| Input Size | 128×128 |
-| Batch Size | 32 |
-| Epochs | 100 |
-| Classes | 10 (digits 1-9 + empty) |
-| Hardware | Apple Silicon GPU (MPS) |
+YOLOv8 Nano classifier trained to recognize digits 1-9 and empty cells.
 
 **Training Results**
 
@@ -115,11 +98,11 @@ Identifies digits 1-9 in individual cells using YOLOv8 classification.
 </td>
 </tr>
 <tr>
-<td colspan="2">
+<td colspan="2" align="center">
 
 **Validation Samples**
 
-![Validation Labels](backend/models/results/classify/val_batch0_labels.jpg)
+<img src="backend/models/results/classify/val_batch0_labels.jpg" width="400">
 
 </td>
 </tr>
@@ -164,12 +147,19 @@ backend/
 
 ---
 
-## Requirements
+## Getting Started
 
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/cv-sudokusolver.git
+cd cv-sudokusolver
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run on an image
+cd backend
+python -c "from main import solve_sudoku_image; solve_sudoku_image('path/to/sudoku.jpg')"
 ```
-numpy>=1.21.0
-opencv-python>=4.5.0
-Pillow>=8.0.0
-torch>=1.10.0
-ultralytics>=8.0.0
-```
+
+Output is saved to `solved_sudoku.jpg` by default.
