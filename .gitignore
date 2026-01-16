@@ -36,6 +36,10 @@ runs/
 *.onnx
 weights/
 
+# Keep main models for the repo
+!backend/models/grid-detect.pt
+!backend/models/digit-classify.pt
+
 # Datasets
 datasetsudoku/
 datasetsudoku.zip
@@ -44,4 +48,3 @@ datasetdigits/
 
 # Logs
 *.log
-models/
