@@ -13,7 +13,7 @@ else:
 model = YOLO("yolov8n-cls.pt")  # classification model (not detection)
 
 model.train(
-    data="../datasetdigits",  # path to digit dataset
+    data="../../datasetdigits",  # path to digit dataset
     epochs=100,
     imgsz=128,
     device=device,

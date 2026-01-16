@@ -1,7 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont
 from typing import List
 
-
 def solution_to_image(solution: List[str], filename: str = "sudoku.jpg", cell_size: int = 50) -> None:
     """Render a solved sudoku board (list of 9 strings) as a JPG image."""
     size = cell_size * 9

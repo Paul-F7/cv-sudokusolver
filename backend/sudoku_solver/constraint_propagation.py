@@ -46,6 +46,19 @@ def remove_from_column(puzzle: Puzzle, col: int, value: int) -> Puzzle:
         )
     return new_puzzle
 
+# Remove a value from all cells in the same 3x3 box.
+def remove_from_box(puzzle: Puzzle, col: int, row: int, value: int) -> Puzzle:
+    new_puzzle = copy.deepcopy(puzzle)
+    # Find the top-left corner of the 3x3 box
+    box_row = (row // 3) * 3
+    box_col = (col // 3) * 3
+
+    for r in range(box_row, box_row + 3):
+        for c in range(box_col, box_col + 3):
+            new_puzzle[r][c] = remove_value_from_cell(new_puzzle[r][c], value)
+
+    return new_puzzle
+
 # Convert a single-element list to just its value (e.g., [3] -> 3). (solved)
 def make_cell_a_number(puzzle: Puzzle, col: int, row: int) -> Puzzle:
     cell = puzzle[row][col]
@@ -71,10 +84,13 @@ def remove_singles_once(puzzle: Puzzle) -> Puzzle:
     
     # Step 2: Remove the value from all cells in the same row
     puzzle = remove_from_row(puzzle, row, value)
-    
+
     # Step 3: Remove the value from all cells in the same column
     puzzle = remove_from_column(puzzle, col, value)
-    
+
+    # Step 4: Remove the value from all cells in the same 3x3 box
+    puzzle = remove_from_box(puzzle, col, row, value)
+
     return puzzle
 
 #  Repeatedly apply singles removal until no more singles exist.
