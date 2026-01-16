@@ -3,7 +3,6 @@ from sudoku_solver.puzzle import strings_to_puzzle
 from sudoku_solver.solver import solve_latin
 from sudoku_solver.sudoku_validator import is_valid_sudoku
 from sudoku_display.main import solution_to_image
-import cv2
 
 def solve_sudoku_image(img, output_path="solved_sudoku.jpg"):
     puzzle_strings = process_sudoku(img)
