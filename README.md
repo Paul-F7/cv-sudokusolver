@@ -1,66 +1,175 @@
 # CV Sudoku Solver
 
-A computer vision system that photographs a Sudoku puzzle and solves it automatically.
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
+![YOLO](https://img.shields.io/badge/YOLOv8-00FFFF?style=for-the-badge&logo=yolo&logoColor=black)
 
-## Pipeline
+Photograph a Sudoku puzzle and get the solution instantly.
 
-```
-Photo → Detect Grid → Warp → Split Cells → Recognize Digits → Solve → Render Solution
-```
+---
 
-## Computer Vision (YOLOv8)
+## Model Performance
 
-Two neural networks handle the image processing:
+### Grid Detection
+- **99.5% mAP50** — mean average precision at 50% IoU threshold
+- **99.9% Precision** — minimal false positives
+- **100% Recall** — detects every grid
 
-**Grid Detection** - A YOLOv8 object detection model locates the Sudoku grid in any photo. Trained on 1000+ images, the model achieves 99.5% mAP with near-perfect precision and recall. It handles varying lighting conditions, different paper colors, camera angles, and works with both printed and handwritten puzzles.
+### Digit Recognition
+- **99.0% Top-1 Accuracy** — correct digit on first prediction
+- **100% Top-5 Accuracy** — correct digit always in top 5 predictions
+- **10-class classifier** — digits 1-9 plus empty cells
 
-**Digit Recognition** - A YOLOv8 classification model reads the digits (1-9) from each of the 81 cells. Empty cells are identified by analyzing pixel density in the cell center after adaptive thresholding.
+### Robustness
+- Printed and handwritten puzzles
+- Varying lighting and exposure
+- Skewed camera angles
+- Any paper color or background
+
+---
+
+## Models
+
+### Grid Detection Model
+
+Locates Sudoku grids in photographs using YOLOv8 object detection.
+
+| Specification | Value |
+|---------------|-------|
+| Architecture | YOLOv8 Nano |
+| Input Size | 416×416 |
+| Epochs | 100 |
+| Dataset | 500+ images (Roboflow) |
+| Hardware | Apple Silicon GPU (MPS) |
+
+**Training Results**
+
+<table>
+<tr>
+<td width="50%">
+
+**Training Curves**
+
+![Results](backend/models/results/detect/results.png)
+
+</td>
+<td width="50%">
+
+**Precision-Recall Curve**
+
+![PR Curve](backend/models/results/detect/BoxPR_curve.png)
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Confusion Matrix**
+
+![Confusion Matrix](backend/models/results/detect/confusion_matrix_normalized.png)
+
+</td>
+<td>
+
+**Validation Predictions**
+
+![Validation](backend/models/results/detect/val_batch0_pred.jpg)
+
+</td>
+</tr>
+</table>
+
+---
+
+### Digit Classification Model
+
+Identifies digits 1-9 in individual cells using YOLOv8 classification.
+
+| Specification | Value |
+|---------------|-------|
+| Architecture | YOLOv8 Nano Classification |
+| Input Size | 128×128 |
+| Batch Size | 32 |
+| Epochs | 100 |
+| Classes | 10 (digits 1-9 + empty) |
+| Hardware | Apple Silicon GPU (MPS) |
+
+**Training Results**
+
+<table>
+<tr>
+<td width="50%">
+
+**Training Curves**
+
+![Results](backend/models/results/classify/results.png)
+
+</td>
+<td width="50%">
+
+**Confusion Matrix**
+
+![Confusion Matrix](backend/models/results/classify/confusion_matrix_normalized.png)
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+
+**Validation Samples**
+
+![Validation Labels](backend/models/results/classify/val_batch0_labels.jpg)
+
+</td>
+</tr>
+</table>
+
+---
+
+## How It Works
+
+1. **Detect** — YOLOv8 locates the Sudoku grid in your photo
+2. **Warp** — OpenCV corrects perspective to create a perfect square
+3. **Split** — Grid is divided into 81 individual cells
+4. **Recognize** — YOLOv8 classifier identifies each digit
+5. **Solve** — Constraint propagation + backtracking finds the solution
+6. **Render** — Solution is drawn onto a clean grid image
+
+---
 
 ## Solving Algorithm
 
-The solver combines two classical AI techniques:
+Uses a hybrid approach:
 
-**Constraint Propagation** - When a cell has only one possible value, that value is eliminated from all other cells in the same row, column, and 3x3 block. This process repeats until no more eliminations are possible. For easy and medium puzzles, constraint propagation alone finds the solution without any guessing.
+1. **Constraint Propagation** — Eliminates impossible values by checking rows, columns, and 3x3 blocks. Solves most puzzles without guessing.
 
-**Backtracking Search** - For harder puzzles where multiple possibilities remain, the algorithm selects an unsolved cell, makes a guess, and recursively attempts to solve the resulting puzzle. If it reaches an invalid state (a cell with no legal values), it backtracks to the last decision point and tries a different value. This depth-first search guarantees finding a solution if one exists.
+2. **Backtracking Search** — For harder puzzles, tries possibilities and backtracks when stuck. Guarantees a solution if one exists.
+
+Solves any valid Sudoku in under 100ms.
+
+---
+
+## Project Structure
 
 ```
-                    [Initial Puzzle]
-                          │
-                          ▼
-               ┌─────────────────────┐
-               │     Propagate       │ ◄─────────────────┐
-               │    Constraints      │                   │
-               └─────────────────────┘                   │
-                          │                              │
-                          ▼                              │
-                ┌───────────────────┐                    │
-                │  Solved?          │── Yes ──► Done     │
-                └───────────────────┘                    │
-                          │ No                           │
-                          ▼                              │
-                ┌───────────────────┐                    │
-                │  Pick unsolved    │                    │
-                │  cell, try value  │                    │
-                └───────────────────┘                    │
-                          │                              │
-                          ▼                              │
-                ┌───────────────────┐                    │
-                │  Valid state?     │── Yes ─────────────┘
-                └───────────────────┘
-                          │ No
-                          ▼
-                     Backtrack
+backend/
+├── sudoku_detector/     # Computer vision pipeline
+│   ├── services/        # Detection, warping, recognition
+│   ├── training/        # Model training scripts
+│   └── models/          # Trained weights (.pt files)
+├── sudoku_solver/       # Solving algorithms
+└── sudoku_display/      # Solution rendering
 ```
 
-The combination of constraint propagation (to prune the search space) and backtracking (to handle ambiguity) solves any valid Sudoku puzzle in under 100ms.
+---
 
-## Tech Stack
+## Requirements
 
-| Technology | Purpose |
-|------------|---------|
-| **Python** | Core language for the entire pipeline |
-| **PyTorch** | Deep learning framework powering the neural networks |
-| **YOLOv8 (Ultralytics)** | State-of-the-art object detection and image classification |
-| **OpenCV** | Image preprocessing, thresholding, and cell extraction |
-| **Pillow** | Rendering solved sudoku grids as images |
+```
+numpy>=1.21.0
+opencv-python>=4.5.0
+Pillow>=8.0.0
+torch>=1.10.0
+ultralytics>=8.0.0
+```
