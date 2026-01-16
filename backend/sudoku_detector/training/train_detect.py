@@ -13,21 +13,3 @@ model = YOLO("yolov8n.pt")  # nano model - faster to download and train usually 
 
 # Train the model
 model.train(data="../datasetsudoku/data.yaml", epochs=100, imgsz=416, device=device)
-
-
-''''
-# Run inference on an image
-results = model('image.jpg')
-
-# Display results
-results[0].show()
-
-# Get detections
-for r in results:
-    boxes = r.boxes  # bounding boxes
-    for box in boxes:
-        cls = int(box.cls[0])  # class id
-        conf = float(box.conf[0])  # confidence
-        xyxy = box.xyxy[0].tolist()  # coordinates
-        print(f"Detected {model.names[cls]} with {conf:.2f} confidence")
-'''
