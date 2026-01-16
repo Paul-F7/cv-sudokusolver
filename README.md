@@ -5,21 +5,20 @@
 ![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
 ![YOLO](https://img.shields.io/badge/YOLOv8-00FFFF?style=for-the-badge&logo=yolo&logoColor=black)
 
-Photograph a Sudoku puzzle and get the solution instantly.
+Photograph a Sudoku puzzle and get the solved grid as an image.
 
 ---
 
 ## Model Performance
 
 ### Grid Detection
-- **99.5% mAP50** — mean average precision at 50% IoU threshold
-- **99.9% Precision** — minimal false positives
-- **100% Recall** — detects every grid
+- **99.5% mAP** — detection accuracy across varying conditions
+- **99.9% precision** — minimal false positives
+- **100% recall** — never misses a grid
 
 ### Digit Recognition
-- **99.0% Top-1 Accuracy** — correct digit on first prediction
-- **100% Top-5 Accuracy** — correct digit always in top 5 predictions
-- **10-class classifier** — digits 1-9 plus empty cells
+- **99% accuracy** — correct digit on first prediction
+- **100% top-5** — correct answer always in top 5 predictions
 
 ### Robustness
 - Printed and handwritten puzzles
@@ -122,12 +121,11 @@ YOLOv8 Nano classifier trained on 4,400+ cell images to recognize digits 1-9 and
 ---
 
 ## Solving Algorithm
-
-Uses a hybrid approach:
-
+Narrows down options dynamically before solving via depth-first search.
+Dynamic approach, narrow down options, then depth-first search
 1. **Constraint Propagation** — Eliminates impossible values by checking rows, columns, and 3x3 blocks. Solves most puzzles without guessing.
 
-2. **Backtracking Search** — For harder puzzles, tries possibilities and backtracks when stuck. Guarantees a solution if one exists.
+2. **Backtracking(DFS)** — For harder puzzles, recursively tries possibilities and backtracks on invalid states. Guarantees a solution if one exists.
 
 Solves any valid Sudoku in under 100ms.
 
@@ -163,3 +161,26 @@ python -c "import cv2; from main import solve_sudoku_image; solve_sudoku_image(c
 ```
 
 Output is saved to `solved_sudoku.jpg`.
+
+---
+
+## Demo
+
+<table>
+<tr>
+<td width="50%" align="center">
+
+**Input**
+
+<img src="demo/input.jpg" width="300">
+
+</td>
+<td width="50%" align="center">
+
+**Output**
+
+<img src="demo/output.jpg" width="300">
+
+</td>
+</tr>
+</table>

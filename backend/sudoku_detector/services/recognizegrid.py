@@ -1,17 +1,5 @@
 # will recognize grid from cells
-#CONF = 0.85
-CONF = {
-    0: 0.85,  # empty
-    1: 0.85,
-    2: 0.85,
-    3: 0.85,
-    4: 0.85,
-    5: 0.85,
-    6: 0.6,   # lower threshold for 6 as it had trouble with it
-    7: 0.85,
-    8: 0.85,
-    9: 0.85,
-}
+CONF = 0.7
 
 def recognize_grid(cells, model):
     rows = []
@@ -26,8 +14,7 @@ def recognize_grid(cells, model):
             if results[0].probs is not None:
                 predicted = int(results[0].probs.top1)
                 conf = results[0].probs.top1conf
-                threshold = CONF.get(predicted, 0.85)
-                digit = predicted if conf > threshold else 0
+                digit = predicted if conf > CONF else 0
             else:
                 digit = 0
             row_str += '?' if digit == 0 else str(digit)
