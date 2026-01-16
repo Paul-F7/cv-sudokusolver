@@ -76,7 +76,7 @@ YOLOv8 Nano object detection trained on 500+ images from Roboflow.
 
 ### Digit Classification Model
 
-YOLOv8 Nano classifier trained to recognize digits 1-9 and empty cells.
+YOLOv8 Nano classifier trained on 4,400+ cell images to recognize digits 1-9 and empty cells.
 
 **Training Results**
 
@@ -159,7 +159,7 @@ pip install -r requirements.txt
 
 # Run on an image
 cd backend
-python -c "from main import solve_sudoku_image; solve_sudoku_image('path/to/sudoku.jpg')"
+python -c "import cv2; from main import solve_sudoku_image; solve_sudoku_image(cv2.imread('path/to/sudoku.jpg'))"
 ```
 
-Output is saved to `solved_sudoku.jpg` by default.
+Output is saved to `solved_sudoku.jpg`.
