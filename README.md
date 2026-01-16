@@ -7,7 +7,24 @@
 
 Photograph a Sudoku puzzle and get the solved grid as an image.
 
----
+<table>
+<tr>
+<td width="40%" align="center">
+
+**Input**
+
+<img src="demo/input.jpg" width="250">
+
+</td>
+<td width="40%" align="center">
+
+**Output**
+
+<img src="demo/output.jpg" width="250">
+
+</td>
+</tr>
+</table>
 
 ## Model Performance
 
@@ -161,26 +178,3 @@ python -c "import cv2; from main import solve_sudoku_image; solve_sudoku_image(c
 ```
 
 Output is saved to `solved_sudoku.jpg`.
-
----
-
-## Demo
-
-<table>
-<tr>
-<td width="50%" align="center">
-
-**Input**
-
-<img src="demo/input.jpg" width="300">
-
-</td>
-<td width="50%" align="center">
-
-**Output**
-
-<img src="demo/output.jpg" width="300">
-
-</td>
-</tr>
-</table>
